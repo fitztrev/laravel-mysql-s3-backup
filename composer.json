@@ -1,0 +1,20 @@
+{
+    "name": "fitztrev/laravel-mysql-s3-backup",
+    "description": "",
+    "authors": [
+        {
+            "name": "Trevor Fitzgerald",
+            "email": "fitztrev@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "4.2.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Fitztrev\\LaravelMysqlS3Backup\\": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
