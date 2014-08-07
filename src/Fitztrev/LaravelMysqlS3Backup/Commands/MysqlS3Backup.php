@@ -45,10 +45,13 @@ class MysqlS3Backup extends Command {
 		$db_user = Config::get('database.connections.mysql.username');
 		$db_pass = Config::get('database.connections.mysql.password');
 
+		// Set the filename for the mysqldump
+		// backup-YYYYMMDD-hhmmss.sql
 		$filename = sprintf('/tmp/backup-%s-%s.sql', $db_name, date('Ymd-His'));
 
 		$this->info('Running backup for database `' . $db_name . '`');
 
+		// Build the command to be run
 		$cmd = sprintf('mysqldump --host=%s --user=%s --password=%s --single-transaction --routines --triggers %s',
 			escapeshellarg($db_host),
 			escapeshellarg($db_user),
@@ -56,13 +59,15 @@ class MysqlS3Backup extends Command {
 			escapeshellarg($db_name)
 		);
 
-		if ( Config::get('laravel-mysql-s3-backup::gzip') ) {
+		// Handle gzip
+		if (Config::get('laravel-mysql-s3-backup::gzip')) {
 			$filename .= '.gz';
 			$cmd      .= sprintf(' | gzip > %s', escapeshellarg($filename));
 		} else {
 			$cmd      .= sprintf(' > %s', escapeshellarg($filename));
 		}
 
+		// Run the command
 		$process = new Process($cmd);
 		$process->run();
 
@@ -71,11 +76,13 @@ class MysqlS3Backup extends Command {
 			return;
 		}
 
+		// Upload to S3
 		$s3 = S3Client::factory([
 			'key'    => Config::get('laravel-mysql-s3-backup::s3.key'),
 			'secret' => Config::get('laravel-mysql-s3-backup::s3.secret'),
 		]);
 
+		// Will upload to bucket:prefix/YYYY/MM/DD/filename.sql
 		$key = sprintf('%s/%s/%s/%s/%s',
 			Config::get('laravel-mysql-s3-backup::s3.prefix'),
 			date('Y'),
@@ -90,7 +97,9 @@ class MysqlS3Backup extends Command {
 			'SourceFile' => $filename,
 		]);
 
+		// Delete the local tmp file
 		unlink($filename);
+
 		$this->info('Done');
 	}
 
