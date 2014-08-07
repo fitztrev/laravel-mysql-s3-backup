@@ -6,7 +6,7 @@ return array(
 		'key'    => 'AMAZON_API_KEY',
 		'secret' => 'AMAZON_API_SECRET',
 		'bucket' => 'your-bucket-name',
-		'prefix' => '/path/to/backups',
+		'prefix' => '',
 	],
 
 	// Gzip the file before uploading?
