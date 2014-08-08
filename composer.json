@@ -1,6 +1,6 @@
 {
     "name": "fitztrev/laravel-mysql-s3-backup",
-    "description": "",
+    "description": "Backup the MySQL database of your Laravel app to Amazon S3",
     "authors": [
         {
             "name": "Trevor Fitzgerald",
